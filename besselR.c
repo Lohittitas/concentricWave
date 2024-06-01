@@ -1,18 +1,13 @@
-//************************ UNIFORM GRID ****************************//
-//******************************************************************//
-
 #include "axi.h"
 #include "navier-stokes/centered.h"
 #include "two-phase.h"
 #include "reduced.h"
 #include "tension.h"
-#include "vtk.h"
 #define resolution 1024
-#define epsilon 1.0
-#define l5 16.4706
+#define epsilon 0.061
 #define mean 2.141
 
-//BOUNDARY CONDITIONS FOR FACE-CENTERED VELOCITY FIELD//
+
 //NO PENETRATION B.C//
 uf.n[left]   = 0.;
 uf.n[right]  = 0.;
@@ -35,17 +30,16 @@ int main(){
 
 //INITIAL COLOR FUNCTION FIELD//
 event init (t = 0){
-	if(!restore(file="./dump/snapshot-93")){
 	double domain = 4.282;
-	double a0 = 1.0*epsilon*(domain/l5);
-	double b=1.5625;
-	fraction (f, -((x ) +a0*(1-b*y*y)*exp(-b*y*y)));}
+	double a0 = epsilon*domain;
+	double b=1.5625; 
+	fraction (f, -((x ) +a0*(1-b*y*y)*exp(-b*y*y)));
 }
 
 event vof (i++, first);
 
 event display_running(i++){
-	printf ("BESSEL MODE || EPS = %g || TIME : %g",epsilon,t);
+	printf (" TIME : %g",epsilon,t);
 	putchar ('\n');
 	fflush (stdout);
 }
@@ -60,8 +54,6 @@ event interface (t = 0.0; t <= 0.5; t+=0.001) {
 	boundary ({pid});
 	p.nodump = false;
 	dump(namedump);
-	
-	
 
 }
 event adapt (i++) {
