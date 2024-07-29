@@ -20,3 +20,6 @@ Code for concentrc wave focussing
 ## Necessary dependencies in Python for inverse Laplace transform 
 - Install `mpmath` and `scipy` module(check their documentation)
 - Run `saveData.py` to generate the results from theory by solving equation 3.2 in paper by numerical inverse Laplace transform and to save the interface data.
+
+- ## Find coefficient matrices here
+- https://drive.google.com/drive/folders/1ZqWXmdf8EZYsPg1NWWgOGqrg2N0lCaF5?usp=drive_link
