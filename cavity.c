@@ -22,6 +22,10 @@ int main(){
 	f.sigma =72.0;
 	mu1 = 0.00, mu2 = 0.00;
 	TOLERANCE = 1e-6;
+
+	char comm[80];
+  sprintf (comm, "mkdir -p intermediate");
+  system(comm);
 	
 	size(4.282);
 	init_grid(resolution);
@@ -45,18 +49,19 @@ event display_running(i++){
 }
 
 event interface (t = 0.0; t <= 0.5; t+=0.001) {
-
 	char namedump[80];
-	sprintf (namedump, "./dump/snapshot-%g", t*1000);
-	scalar pid[];
-	foreach()
-	pid[] = fmod(pid()*(npe() + 37), npe());
-	boundary ({pid});
-	p.nodump = false;
+	sprintf (namedump, "intermediate/snapshot-%5.4f", t);
+	
+	// Vatsal: why do you write pid as well? Also, do you need the pressure? saving these frequenty can be memory intensive and lead to code stalls.
+	// scalar pid[];
+	// foreach()
+	// pid[] = fmod(pid()*(npe() + 37), npe());
+	// boundary ({pid});
+	// p.nodump = false;
+	
 	dump(namedump);
 
 }
 event adapt (i++) {
-
   adapt_wavelet ({f,u}, (double[]){1e-3,1e-3,1e-3},10);
 }
