@@ -20,8 +20,12 @@ int main(){
 	G.x = -981.0;
 	rho1 = 1.0, rho2 = 0.0010;
 	f.sigma =72.0;
-	mu1 = 0.00, mu2 = 0.00;
+	mu1 = 1e-2, mu2 = 1e-4;
 	TOLERANCE = 1e-6;
+
+	char comm[80];
+  sprintf (comm, "mkdir -p intermediate");
+  system(comm);
 	
 	size(4.282);
 	init_grid(resolution);
@@ -34,6 +38,10 @@ event init (t = 0){
 	double a0 = epsilon*domain;
 	double b=1.5625; 
 	fraction (f, -((x ) +a0*(1-b*y*y)*exp(-b*y*y)));
+	foreach(){
+		u.x[] = 0;
+		u.y[] = 0;
+	}
 }
 
 event vof (i++, first);
@@ -45,18 +53,19 @@ event display_running(i++){
 }
 
 event interface (t = 0.0; t <= 0.5; t+=0.001) {
-
 	char namedump[80];
-	sprintf (namedump, "./dump/snapshot-%g", t*1000);
-	scalar pid[];
-	foreach()
-	pid[] = fmod(pid()*(npe() + 37), npe());
-	boundary ({pid});
-	p.nodump = false;
+	sprintf (namedump, "intermediate/snapshot-%5.4f", t);
+	
+	// Vatsal: why do you write pid as well? Also, do you need the pressure? saving these frequenty can be memory intensive and lead to code stalls.
+	// scalar pid[];
+	// foreach()
+	// pid[] = fmod(pid()*(npe() + 37), npe());
+	// boundary ({pid});
+	// p.nodump = false;
+	
 	dump(namedump);
 
 }
 event adapt (i++) {
-
-  adapt_wavelet ({f,u}, (double[]){1e-3,1e-3,1e-3},10);
+  adapt_wavelet ({f,u}, (double[]){1e-3,1e-3,1e-3},8);
 }
