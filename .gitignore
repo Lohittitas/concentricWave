@@ -2,6 +2,11 @@
 cavity
 **/*.csv
 getEtaNvz
+test.mp4
+VideoInterface
+getFacet
+test
+**/*.html
 
 # Object files
 *.o

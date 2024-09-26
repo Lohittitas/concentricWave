@@ -1,9 +1,12 @@
+# Get the interface position and velocity at r = 0 and also save the interface that can be used for visualization
+# this code triggers getFacet and getEtaNvz. getFacet is used to get the interface in the form of segments
+# and getEtaNvz is used to get the interface position and velocity at r = 0. the latter will save the interface position and velocity in a csv file...
 
-# Author: Vatsal Sanjay
-# Edited by: Aman Bhargava
+# Author: Vatsal Sanjay & Aman Bhargava
 # vatsalsanjay@gmail.com, amanbhargava2000@gmail.com
 # Physics of Fluids
-# Last updated: 02-Feb-2024
+# v1.0
+# Last updated: Sep 26, 2024
 
 import numpy as np
 import os
@@ -49,6 +52,10 @@ mean = 2.141
 rmin, rmax, zmin, zmax = [0.0, Ldomain, -mean, Ldomain-mean]
 lw = 4
 
+writefile = "etaNvz.csv"
+if os.path.exists(writefile):
+    os.remove(writefile)
+
 folder = 'VideoInterface'  # output folder
 if not os.path.isdir(folder):
     os.makedirs(folder)
@@ -73,6 +80,14 @@ for ti in range(nGFS):
             if (len(segs) == 0):
                 print("Problem in the available file %s" % place)
             else:
+                exe = ["./getEtaNvz", place, writefile]
+                p = sp.Popen(exe, stdout=sp.PIPE, stderr=sp.PIPE)
+                stdout, stderr = p.communicate()
+                temp1 = stderr.decode("utf-8")
+                temp2 = temp1.split("\n")
+                print(temp2)
+                temp3 = temp2[0].split(",")
+                r, z, v = np.array([float(temp3[0]), float(temp3[1]), float(temp3[2])])
                 # print(zminp, zmaxp, rminp, rmaxp)
                 # Part to plot
                 AxesLabel, TickLabel = [50, 20]
@@ -89,6 +104,7 @@ for ti in range(nGFS):
                 ax.plot([-rmax, rmax], [zmin, zmin],'-',color='black',linewidth=lw)
                 ax.plot([-rmax, rmax], [zmax, zmax],'-',color='black',linewidth=lw)
                 ax.plot([rmax, rmax], [zmin, zmax],'-',color='black',linewidth=lw)
+                ax.plot(r, z, 'o', color='red', markersize=10)
 
                 ax.set_aspect('equal')
                 ax.set_xlim(-rmax, rmax)
