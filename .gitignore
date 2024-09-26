@@ -1,5 +1,7 @@
 **/intermediate
 cavity
+**/*.csv
+getEtaNvz
 
 # Object files
 *.o

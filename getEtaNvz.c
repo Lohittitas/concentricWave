@@ -11,7 +11,7 @@
 #include "fractions.h"
 #include "tag.h"
 
-char filename[80];
+char filename[80], writefile[80];
 scalar f[];
 vector u;
 double Ymax = 1e-2;
@@ -54,6 +54,7 @@ TagResult tag_largest_region(scalar field, double threshold) {
 
 int main(int argc, char const *argv[]) {
   sprintf(filename, "%s", argv[1]);
+  sprintf(writefile, "%s", argv[2]);
   restore(file = filename);
 
   double threshold = 1e-4;
@@ -63,7 +64,10 @@ int main(int argc, char const *argv[]) {
   int main_phase_liquid = liquid_result.main_phase;
   scalar d_liquid = liquid_result.d;
 
-  FILE *fp = ferr;
+  FILE *fp = fopen(writefile, "a");
+  if (t == 0) {
+    fprintf(fp, "eta,vz\n");
+  }
 
   double Xeta = -HUGE;
   double vz = 0;
@@ -83,7 +87,7 @@ int main(int argc, char const *argv[]) {
       }
     }
   }
-  fprintf(fp, "%g %g\n", Xeta, vz);
+  fprintf(fp, "%5.4f,%5.4e\n", Xeta, vz);
   fflush(fp);
   fclose(fp);
 
