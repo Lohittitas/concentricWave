@@ -7,6 +7,7 @@ Code for concentrc wave focussing
 - `git clone https://github.com/Lohittitas/concentricWave`
 
 ## Running CFD simulation in Basilisk
+- Ensure Basilisk installation from http://basilisk.fr/
 - `cd concentricWave`
 - `sh run.sh` will run this simulation on 4 cores of CPU. One may change number of cores. This should also generate the necessary dump files.
 
